@@ -1,0 +1,525 @@
+<!doctype html>
+<html lang="sv">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Tidslinje – B 22021-24 Stockholms tingsrätt</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Courier+Prime:wght@400;700&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,500;1,8..60,400&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;-webkit-font-smoothing:antialiased}
+
+:root{
+  --bg:       #f6f0e6;
+  --bg2:      #ede7d9;
+  --surface:  #ece6d8;
+  --card:     #fffcf8;
+  --card-hi:  #fff9f2;
+  --border:   #d5ccba;
+  --border-hi:#b8ac96;
+  --text:     #2a231a;
+  --text-s:   #1a1410;
+  --muted:    #7a7060;
+  --axis:     #b91c1c;
+  --axis-faint:rgba(185,28,28,.08);
+
+  --c-aktenskap:#F5A800;
+  --c-chatt:#8DC63F;
+  --c-dvitamin:#00AEEF;
+  --c-kalium:#DC2626;
+  --c-kalcium:#00AEEF;
+  --c-blod:#7B3FAB;
+  --c-journal:#F7941D;
+  --c-internet:#111111;
+  --c-ovrigt:#00A651;
+
+  --fd:'Cormorant Garamond',Georgia,serif;
+  --fb:'Source Serif 4',Georgia,serif;
+  --fm:'Courier Prime','Courier New',monospace;
+}
+
+body{
+  background-color:var(--bg);
+  color:var(--text);
+  font-family:var(--fb);
+  font-size:14px;
+  line-height:1.65;
+  min-height:100vh;
+}
+
+/* scroll progress */
+#spb{position:fixed;top:0;left:0;height:2px;background:var(--axis);z-index:10000;width:0%;
+     box-shadow:0 0 8px rgba(185,28,28,.5);transition:width .08s linear;}
+
+/* grain overlay */
+.grain{position:fixed;inset:0;pointer-events:none;z-index:9999;opacity:.028;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='256' height='256'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.65' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");}
+
+/* ── HEADER ── */
+header{
+  position:relative;
+  padding:50px 40px 44px;
+  background:var(--surface);
+  border-bottom:2px solid var(--border);
+  overflow:hidden;
+}
+header::before{
+  content:'';position:absolute;left:0;top:0;bottom:0;width:5px;
+  background:linear-gradient(180deg,var(--axis),rgba(185,28,28,.3));
+}
+header::after{
+  content:'';position:absolute;inset:0;pointer-events:none;
+  background:radial-gradient(ellipse 60% 100% at 30% 50%,rgba(185,28,28,.04),transparent 65%);
+}
+.hdr{max-width:1160px;margin:0 auto;padding-left:20px;display:flex;align-items:flex-start;gap:24px;position:relative;z-index:1;}
+.hdr-main{flex:1;}
+.case-ref{
+  font-family:var(--fm);font-size:10px;letter-spacing:.16em;
+  color:var(--axis);text-transform:uppercase;margin-bottom:16px;
+  display:flex;align-items:center;gap:10px;
+}
+.case-ref::before{content:'';display:block;width:20px;height:1px;background:var(--axis);}
+h1{
+  font-family:var(--fd);font-size:46px;font-weight:700;
+  color:var(--text-s);line-height:1.08;letter-spacing:-.02em;margin-bottom:14px;
+}
+h1 em{color:var(--axis);font-style:italic;}
+.hdr-sub{font-family:var(--fm);font-size:11px;color:var(--muted);letter-spacing:.06em;}
+.hdr-count{text-align:right;flex-shrink:0;padding-top:2px;}
+.hdr-count .big{
+  font-family:var(--fd);font-size:80px;font-weight:700;line-height:1;
+  color:rgba(185,28,28,.09);display:block;letter-spacing:-.05em;
+}
+.hdr-count .lbl{font-family:var(--fm);font-size:9px;letter-spacing:.14em;color:var(--muted);text-transform:uppercase;}
+
+/* ── STICKY CONTROLS ── */
+.controls{
+  position:sticky;top:0;z-index:100;
+  background:var(--surface);
+  border-bottom:1px solid var(--border);
+  box-shadow:0 2px 12px rgba(0,0,0,.06);
+}
+.filters{
+  max-width:1160px;margin:0 auto;padding-left:20px;
+  padding-top:9px;padding-bottom:9px;padding-right:20px;
+  display:flex;flex-wrap:wrap;gap:5px;align-items:center;
+}
+.flt-lbl{font-family:var(--fm);font-size:9px;letter-spacing:.14em;color:var(--muted);text-transform:uppercase;margin-right:6px;flex-shrink:0;}
+.fbtn{
+  display:inline-flex;align-items:center;gap:5px;
+  padding:4px 11px;border-radius:2px;
+  border:1px solid var(--border);background:transparent;cursor:pointer;
+  font-family:var(--fm);font-size:9px;letter-spacing:.08em;text-transform:uppercase;
+  color:var(--muted);
+  transition:color .15s,border-color .15s,background .15s,box-shadow .15s;
+}
+.fbtn .d{width:6px;height:6px;border-radius:50%;flex-shrink:0;}
+.fbtn:hover{color:var(--text);border-color:var(--border-hi);background:rgba(0,0,0,.03);}
+.fbtn.on{color:#fff;border-color:transparent;box-shadow:0 2px 6px rgba(0,0,0,.18);}
+.fbtn[data-cat=all].on{background:var(--axis);}
+.fbtn[data-cat="Äktenskapsförord"].on{background:var(--c-aktenskap);}
+.fbtn[data-cat="Chatt/SMS/Mejl"].on{background:var(--c-chatt);}
+.fbtn[data-cat="Inköp D-vitamin"].on{background:var(--c-dvitamin);}
+.fbtn[data-cat="Inköp Kalium"].on{background:var(--c-kalium);}
+.fbtn[data-cat="Inköp Kalcium"].on{background:var(--c-kalcium);}
+.fbtn[data-cat="Blodvärde"].on{background:var(--c-blod);}
+.fbtn[data-cat="Journal"].on{background:var(--c-journal);}
+.fbtn[data-cat="Internetsökning"].on{background:var(--c-internet);}
+.fbtn[data-cat="Övrigt"].on{background:var(--c-ovrigt);}
+
+/* ── TIMELINE WRAP ── */
+.tl-wrap{
+  max-width:1160px;margin:0 auto;
+  padding:60px 24px 120px;
+  position:relative;
+  /* subtle dot grid on parchment */
+  background-image:radial-gradient(rgba(0,0,0,.055) 1px, transparent 1px);
+  background-size:20px 20px;
+}
+.axis-line{
+  position:absolute;left:50%;top:0;bottom:0;
+  width:2px;transform:translateX(-50%);
+  background:linear-gradient(180deg,transparent,var(--axis) 5%,var(--axis) 95%,transparent);
+  opacity:.5;
+}
+
+/* ── YEAR SEPARATOR ── */
+.yr-sep{
+  display:grid;grid-template-columns:1fr 90px 1fr;
+  align-items:center;margin:56px 0 18px;position:relative;z-index:2;
+}
+.yr-line{height:1px;}
+.yr-line.l{background:linear-gradient(to left,var(--border-hi),transparent);}
+.yr-line.r{background:linear-gradient(to right,var(--border-hi),transparent);}
+.yr-badge{display:flex;justify-content:center;}
+.yr-badge span{
+  font-family:var(--fm);font-size:11px;font-weight:700;letter-spacing:.16em;
+  color:var(--axis);background:var(--bg);
+  border:1px solid rgba(185,28,28,.4);
+  padding:5px 12px;border-radius:2px;
+  box-shadow:0 2px 6px rgba(185,28,28,.1);
+}
+
+/* ── EVENT ROW ── */
+.tl-row{
+  display:grid;grid-template-columns:1fr 90px 1fr;
+  align-items:center;margin-bottom:9px;
+  position:relative;z-index:1;
+}
+.gap-marker{
+  display:flex;justify-content:center;align-items:center;
+  position:relative;z-index:1;margin:-4px 0;pointer-events:none;
+}
+.gap-marker span{
+  font-family:var(--fm);font-size:9px;letter-spacing:.12em;
+  color:var(--muted);opacity:.55;text-transform:uppercase;
+  background:var(--bg);padding:0 10px;position:relative;z-index:1;
+}
+.gap-marker::before{
+  content:'';position:absolute;left:50%;top:50%;
+  transform:translate(-50%,-50%);
+  width:1px;height:100%;background:var(--border);opacity:.4;
+}
+
+/* ── AXIS DOT ── */
+.tl-dot{display:flex;flex-direction:column;align-items:center;gap:6px;padding:8px 0;grid-column:2;grid-row:1;}
+.tl-dot-cont{display:flex;justify-content:center;padding:4px 0;grid-column:2;grid-row:1;}
+.dw{position:relative;width:18px;height:18px;flex-shrink:0;}
+.dw::before{content:'';position:absolute;inset:-4px;border-radius:50%;background:currentColor;opacity:.12;}
+.dw::after{content:'';position:absolute;inset:0;border-radius:50%;border:2px solid currentColor;background:var(--bg);}
+.dc{position:absolute;inset:4px;border-radius:50%;background:currentColor;z-index:1;}
+.dd{font-family:var(--fm);font-size:12px;font-weight:700;color:var(--text);white-space:nowrap;text-align:center;letter-spacing:.05em;opacity:.82;}
+
+/* ── COLUMNS ── */
+.tl-l{grid-column:1;grid-row:1;padding-right:var(--cat-indent);position:relative;}
+.tl-r{grid-column:3;grid-row:1;padding-left:var(--cat-indent);position:relative;}
+
+/* connectors from axis to card */
+.tl-l::after{
+  content:'';position:absolute;top:50%;height:1px;
+  right:0;width:var(--cat-indent);
+  background:currentColor;opacity:.8;
+}
+.tl-r::before{
+  content:'';position:absolute;top:50%;height:1px;
+  left:0;width:var(--cat-indent);
+  background:currentColor;opacity:.8;
+}
+
+/* ── CARD ── */
+.tl-card{
+  background:var(--card);
+  border:1px solid var(--border);
+  border-radius:4px;
+  padding:13px 16px;
+  position:relative;overflow:hidden;
+  box-shadow:0 2px 8px rgba(0,0,0,.06),0 1px 2px rgba(0,0,0,.04);
+  /* scroll reveal */
+  opacity:0;
+  transition:opacity .5s ease,transform .5s ease,
+             background .2s,border-color .2s,box-shadow .25s;
+}
+.tl-l .tl-card{transform:translateX(-18px);}
+.tl-r .tl-card{transform:translateX(18px);}
+/* left-side card: accent stripe on right (toward axis) */
+.tl-l .tl-card::before{left:auto;right:0;}
+.tl-card.show{opacity:1;transform:translateX(0)!important;}
+.tl-card:hover{
+  background:var(--card-hi);border-color:var(--border-hi);
+  box-shadow:0 6px 22px rgba(0,0,0,.11),0 2px 4px rgba(0,0,0,.06);
+  transform:scale(1.012)!important;
+}
+
+/* accent stripe on left side */
+.tl-card::before{content:'';position:absolute;top:0;bottom:0;width:3px;background:currentColor;left:0;}
+
+/* card contents */
+.c-hdr{display:flex;align-items:flex-start;justify-content:space-between;gap:8px;margin-bottom:7px;}
+.cat-tag{
+  font-family:var(--fm);font-size:9px;letter-spacing:.1em;text-transform:uppercase;
+  color:currentColor;border:1px solid currentColor;border-radius:2px;
+  padding:2px 7px;opacity:.9;flex-shrink:0;white-space:nowrap;
+}
+.evt-num{font-family:var(--fm);font-size:9px;color:var(--muted);flex-shrink:0;opacity:.45;}
+.c-desc{font-family:var(--fb);font-size:12.5px;line-height:1.62;color:var(--text);}
+
+/* ── KALIUM CRITICAL ── */
+.tl-row[data-cat="Inköp Kalium"] .tl-card{
+  border:1px solid rgba(220,38,38,.35);
+  animation:danger 2.8s ease-in-out infinite;
+}
+.tl-row[data-cat="Inköp Kalium"] .tl-card::after{
+  content:'KRITISKT';
+  position:absolute;font-family:var(--fm);font-size:7.5px;font-weight:700;
+  letter-spacing:.2em;color:var(--c-kalium);opacity:.2;
+  bottom:7px;right:12px;pointer-events:none;
+}
+@keyframes danger{
+  0%,100%{box-shadow:0 2px 8px rgba(0,0,0,.06);}
+  50%{box-shadow:0 4px 20px rgba(220,38,38,.2),0 2px 6px rgba(0,0,0,.06);}
+}
+
+/* ── MOBILE: collapse to left-axis ── */
+@media(max-width:680px){
+  header{padding:36px 20px 30px;}
+  h1{font-size:30px;}
+  .hdr-count{display:none;}
+  .tl-wrap{padding:32px 12px 60px;}
+  .axis-line{left:calc(12px + 20px);}
+  .yr-sep{grid-template-columns:40px 1fr;}
+  .yr-line.l{display:none;}
+  .yr-line.r{display:none;}
+  .yr-badge{justify-content:flex-start;padding-left:4px;}
+  .tl-row{grid-template-columns:40px 1fr!important;}
+  .tl-dot,.tl-dot-cont{grid-column:1!important;grid-row:1!important;}
+  .tl-l{grid-column:2!important;grid-row:1!important;padding-right:0;padding-left:var(--cat-indent);}
+  .tl-l::after{display:none;}
+  .tl-l::before{content:'';position:absolute;top:50%;height:1px;left:0;width:var(--cat-indent);background:currentColor;opacity:.8;}
+  .tl-l .tl-card::before{left:0;right:auto;}
+  .tl-r{grid-column:2!important;grid-row:1!important;}
+}
+/* CAT-OFFSETS-START */
+.tl-row{--cat-indent:36px}
+.tl-row[data-cat="Besökt hemsida"]{--cat-indent:36px;color:#6B7280}
+.tl-row[data-cat="Besökt hemsida"] .tl-card{border-color:#6B7280;border-width:2px}
+.fbtn[data-cat="Besökt hemsida"].on{background:#6B7280}
+.tl-row[data-cat="Besökta hemsidor"]{--cat-indent:36px;color:#6B7280}
+.tl-row[data-cat="Besökta hemsidor"] .tl-card{border-color:#6B7280;border-width:2px}
+.fbtn[data-cat="Besökta hemsidor"].on{background:#6B7280}
+.tl-row[data-cat="Chatt Jietan Liu till Zoe"]{--cat-indent:36px;color:#6B7280}
+.tl-row[data-cat="Chatt Jietan Liu till Zoe"] .tl-card{border-color:#6B7280;border-width:2px}
+.fbtn[data-cat="Chatt Jietan Liu till Zoe"].on{background:#6B7280}
+.tl-row[data-cat="Chatt Zhihui till Zoe"]{--cat-indent:36px;color:#6B7280}
+.tl-row[data-cat="Chatt Zhihui till Zoe"] .tl-card{border-color:#6B7280;border-width:2px}
+.fbtn[data-cat="Chatt Zhihui till Zoe"].on{background:#6B7280}
+.tl-row[data-cat="Chatt Zoe till Bingwen He"]{--cat-indent:36px;color:#6B7280}
+.tl-row[data-cat="Chatt Zoe till Bingwen He"] .tl-card{border-color:#6B7280;border-width:2px}
+.fbtn[data-cat="Chatt Zoe till Bingwen He"].on{background:#6B7280}
+.tl-row[data-cat="Chatt Zoe till Ir0nF1st"]{--cat-indent:36px;color:#6B7280}
+.tl-row[data-cat="Chatt Zoe till Ir0nF1st"] .tl-card{border-color:#6B7280;border-width:2px}
+.fbtn[data-cat="Chatt Zoe till Ir0nF1st"].on{background:#6B7280}
+.tl-row[data-cat="Chatt Zoe till Jietan Liu"]{--cat-indent:36px;color:#6B7280}
+.tl-row[data-cat="Chatt Zoe till Jietan Liu"] .tl-card{border-color:#6B7280;border-width:2px}
+.fbtn[data-cat="Chatt Zoe till Jietan Liu"].on{background:#6B7280}
+.tl-row[data-cat="Chatt Zoe till Shoujji"]{--cat-indent:36px;color:#6B7280}
+.tl-row[data-cat="Chatt Zoe till Shoujji"] .tl-card{border-color:#6B7280;border-width:2px}
+.fbtn[data-cat="Chatt Zoe till Shoujji"].on{background:#6B7280}
+.tl-row[data-cat="Chatt Zoe till Wei"]{--cat-indent:36px;color:#6B7280}
+.tl-row[data-cat="Chatt Zoe till Wei"] .tl-card{border-color:#6B7280;border-width:2px}
+.fbtn[data-cat="Chatt Zoe till Wei"].on{background:#6B7280}
+.tl-row[data-cat="Chatt Zoe till Zhihui"]{--cat-indent:36px;color:#6B7280}
+.tl-row[data-cat="Chatt Zoe till Zhihui"] .tl-card{border-color:#6B7280;border-width:2px}
+.fbtn[data-cat="Chatt Zoe till Zhihui"].on{background:#6B7280}
+.tl-row[data-cat="Chatt Zoe till en gruppchatt"]{--cat-indent:36px;color:#6B7280}
+.tl-row[data-cat="Chatt Zoe till en gruppchatt"] .tl-card{border-color:#6B7280;border-width:2px}
+.fbtn[data-cat="Chatt Zoe till en gruppchatt"].on{background:#6B7280}
+.tl-row[data-cat="Chatt Zoe till en vän i USA"]{--cat-indent:36px;color:#6B7280}
+.tl-row[data-cat="Chatt Zoe till en vän i USA"] .tl-card{border-color:#6B7280;border-width:2px}
+.fbtn[data-cat="Chatt Zoe till en vän i USA"].on{background:#6B7280}
+.tl-row[data-cat="Chatt Zoe till hennes mamma"]{--cat-indent:36px;color:#6B7280}
+.tl-row[data-cat="Chatt Zoe till hennes mamma"] .tl-card{border-color:#6B7280;border-width:2px}
+.fbtn[data-cat="Chatt Zoe till hennes mamma"].on{background:#6B7280}
+.tl-row[data-cat="Chatt/SMS/Mejl"]{--cat-indent:88px;color:#8DC63F}
+.tl-row[data-cat="Chatt/SMS/Mejl"] .tl-card{border-color:#8DC63F;border-width:2px}
+.fbtn[data-cat="Chatt/SMS/Mejl"].on{background:#8DC63F}
+.tl-row[data-cat="Citat ur Merck Manual Home Edition (MSD Manuals)"]{--cat-indent:36px;color:#6B7280}
+.tl-row[data-cat="Citat ur Merck Manual Home Edition (MSD Manuals)"] .tl-card{border-color:#6B7280;border-width:2px}
+.fbtn[data-cat="Citat ur Merck Manual Home Edition (MSD Manuals)"].on{background:#6B7280}
+.tl-row[data-cat="Förhör/värde"]{--cat-indent:36px;color:#6B7280}
+.tl-row[data-cat="Förhör/värde"] .tl-card{border-color:#6B7280;border-width:2px}
+.fbtn[data-cat="Förhör/värde"].on{background:#6B7280}
+.tl-row[data-cat="Inköp"]{--cat-indent:36px;color:#6B7280}
+.tl-row[data-cat="Inköp"] .tl-card{border-color:#6B7280;border-width:2px}
+.fbtn[data-cat="Inköp"].on{background:#6B7280}
+.tl-row[data-cat="Inköp D-vitamin"]{--cat-indent:64px;color:#00AEEF}
+.tl-row[data-cat="Inköp D-vitamin"] .tl-card{border-color:#00AEEF;border-width:2px}
+.fbtn[data-cat="Inköp D-vitamin"].on{background:#00AEEF}
+.tl-row[data-cat="Inköp Kalium"]{--cat-indent:116px;color:#DC2626}
+.tl-row[data-cat="Inköp Kalium"] .tl-card{border-color:#DC2626;border-width:2px}
+.fbtn[data-cat="Inköp Kalium"].on{background:#DC2626}
+.tl-row[data-cat="Internetsökning"]{--cat-indent:52px;color:#111111}
+.tl-row[data-cat="Internetsökning"] .tl-card{border-color:#111111;border-width:2px}
+.fbtn[data-cat="Internetsökning"].on{background:#111111}
+.tl-row[data-cat="Journal"]{--cat-indent:40px;color:#F7941D}
+.tl-row[data-cat="Journal"] .tl-card{border-color:#F7941D;border-width:2px}
+.fbtn[data-cat="Journal"].on{background:#F7941D}
+.tl-row[data-cat="Mejl Zoe till Kristina (S&P)"]{--cat-indent:36px;color:#6B7280}
+.tl-row[data-cat="Mejl Zoe till Kristina (S&P)"] .tl-card{border-color:#6B7280;border-width:2px}
+.fbtn[data-cat="Mejl Zoe till Kristina (S&P)"].on{background:#6B7280}
+.tl-row[data-cat="SMS"]{--cat-indent:36px;color:#6B7280}
+.tl-row[data-cat="SMS"] .tl-card{border-color:#6B7280;border-width:2px}
+.fbtn[data-cat="SMS"].on{background:#6B7280}
+.tl-row[data-cat="Värde"]{--cat-indent:36px;color:#6B7280}
+.tl-row[data-cat="Värde"] .tl-card{border-color:#6B7280;border-width:2px}
+.fbtn[data-cat="Värde"].on{background:#6B7280}
+.tl-row[data-cat="Äktenskapsförord"]{--cat-indent:100px;color:#F5A800}
+.tl-row[data-cat="Äktenskapsförord"] .tl-card{border-color:#F5A800;border-width:2px}
+.fbtn[data-cat="Äktenskapsförord"].on{background:#F5A800}
+.tl-row[data-cat="Övrigt"]{--cat-indent:26px;color:#00A651}
+.tl-row[data-cat="Övrigt"] .tl-card{border-color:#00A651;border-width:2px}
+.fbtn[data-cat="Övrigt"].on{background:#00A651}
+/* CAT-OFFSETS-END */
+</style>
+</head>
+<body>
+
+<div id="spb"></div>
+<div class="grain" aria-hidden="true"></div>
+
+<header>
+  <div class="hdr">
+    <div class="hdr-main">
+      <div class="case-ref">Mål B 22021-24 &bull; Stockholms tingsrätt &bull; Aktbil 43</div>
+      <h1>Tidslinje <em>Actus Reus</em></h1>
+      <div class="hdr-sub">Förundersökningsprotokoll &mdash; 2019-07-17 &ndash; 2021-08 &mdash; <span id="cnt-label">85 händelser</span></div>
+    </div>
+    <div class="hdr-count">
+      <span class="big" id="cnt-big">85</span>
+      <span class="lbl">händelser</span>
+    </div>
+  </div>
+</header>
+
+<div class="controls">
+  <div class="filters">
+    <span class="flt-lbl">Visa</span>
+    <button class="fbtn on" data-cat="all"><span class="d" style="background:var(--axis)"></span>Alla</button>
+    <button class="fbtn" data-cat="Äktenskapsförord"><span class="d" style="background:var(--c-aktenskap)"></span>Äktenskapsförord</button>
+    <button class="fbtn" data-cat="Chatt/SMS/Mejl"><span class="d" style="background:var(--c-chatt)"></span>Chatt / Mejl</button>
+    <button class="fbtn" data-cat="Inköp D-vitamin"><span class="d" style="background:var(--c-dvitamin)"></span>D-vitamin</button>
+    <button class="fbtn" data-cat="Inköp Kalium"><span class="d" style="background:var(--c-kalium)"></span>⚠ Kalium</button>
+    <button class="fbtn" data-cat="Inköp Kalcium"><span class="d" style="background:var(--c-kalcium)"></span>Kalcium</button>
+    <button class="fbtn" data-cat="Blodvärde"><span class="d" style="background:var(--c-blod)"></span>Blodvärde</button>
+    <button class="fbtn" data-cat="Journal"><span class="d" style="background:var(--c-journal)"></span>Journal</button>
+    <button class="fbtn" data-cat="Internetsökning"><span class="d" style="background:var(--c-internet)"></span>Internet</button>
+    <button class="fbtn" data-cat="Övrigt"><span class="d" style="background:var(--c-ovrigt)"></span>Övrigt</button>
+  </div>
+</div>
+
+<div class="tl-wrap" id="timeline">
+  <div class="axis-line" aria-hidden="true"></div>
+</div>
+
+<script>
+const CAT_COLOR={
+  'Äktenskapsförord':'var(--c-aktenskap)',
+  'Chatt/SMS/Mejl':'var(--c-chatt)',
+  'Inköp D-vitamin':'var(--c-dvitamin)',
+  'Inköp Kalium':'var(--c-kalium)',
+  'Inköp Kalcium':'var(--c-kalcium)',
+  'Blodvärde':'var(--c-blod)',
+  'Journal':'var(--c-journal)',
+  'Internetsökning':'var(--c-internet)',
+  'Övrigt':'var(--c-ovrigt)',
+};
+const CAT_INDENT={"Inköp Kalium": 116, "Äktenskapsförord": 100, "Chatt/SMS/Mejl": 88, "Inköp Kalcium": 76, "Inköp D-vitamin": 64, "Internetsökning": 52, "Journal": 40, "Blodvärde": 32, "Övrigt": 26};
+
+const EVENTS=[{"date": "2019-07-08", "cat": "Äktenskapsförord", "desc": "Telefonrådgivning med Söderberg &amp; Partners kring upprättande av testamente, revers á 2,5 milioner kr samt äktenskapsförord."},{"date": "2019-07-10", "cat": "SMS", "desc": "Zoe till Kristina (S&amp;P): &quot;I received the docs including revers and testamente. I have some questions [...&quot;."},{"date": "2019-07-11", "cat": "Äktenskapsförord", "desc": "signeras av Zhihui och Zoe, enligt kopian från Skatteverket. Inkom till Skatteverket 2019-07-17 och registrerades 2019-07-25."},{"date": "2019-07-23", "cat": "Chatt/SMS/Mejl", "desc": "SMS Zoe till Kristina (S&amp;P): telefonrådgivning om upprättande av testamente, revers à 2,5 miljoner kr samt äktenskapsförord."},{"date": "2019-07-31", "cat": "Inköp D-vitamin", "desc": "Inköp D-vitamin: 20 förpackningar, 21 420 dagsdoser."},{"date": "2019-08-21", "cat": "Inköp D-vitamin", "desc": "Inköp D-vitamin: 5 förpackningar, 5 355 dagsdoser."},{"date": "2019-09-16", "cat": "Journal", "desc": "Zhihui har ökade urinmängder och uppmanas ta prover."},{"date": "2019-09-17", "cat": "Inköp", "desc": "D-vitamin, 12 förpackningar, 2680 dagsdoser."},{"date": "2019-09-19", "cat": "Värde", "desc": "Zhihui hade vid provtillfället 3,97 P-calcium (ref. värde 2,15-2,5) samt 2,06 S-Calciumjon fri (ref. värde 1,15-1,35)."},{"date": "2019-09-19", "cat": "Journal", "desc": "Junilabs kontaktar SOS alarm då Zhihui har högt kalcium värde."},{"date": "2019-09-20", "cat": "Besökt hemsida", "desc": "Hyperkalcemi - Baidu Baike*"},{"date": "2019-09-20", "cat": "Journal", "desc": "Lung-Allergi mottagning Karolinska pratar med Zhihui och hans fru, han uppmanas söka vård akut."},{"date": "2019-09-25", "cat": "Journal", "desc": "Kem lab. ringer SOS alarm pga. högt P-kalcium värde 3,61 och D-vitamin värde över 1000."},{"date": "2019-09-26", "cat": "Värde", "desc": "Zhihui hade vid provtillfället 1,8 S-Calciumjon fri (ref. värde 1,15-1,35)."},{"date": "2019-09-26", "cat": "Inköp", "desc": "D-vitamin, 19 förpackningar, 4430 dagsdoser."},{"date": "2019-09-26", "cat": "Journal", "desc": "Zhihui inskrivs på akuten S:t Görans sjukhus. Zoe medföljer."},{"date": "2019-09-27", "cat": "Besökta hemsidor", "desc": "Hyperkalcemi (förhöjda kalciumnivåer i blodet) – Merck Manual Home Edition (MSD Manuals)*; Kalcium i blodplasma – Google Scholar.; Kalciumnivå i blodet – Google Scholar.; Förhöjd kalciumnivå i blodet – Google Scholar; Hyperkalcemisk kris – Google Scholar; Joniserat kalcium – Google Scholar; Orsaker till hyperkalcemi – UpToDate; Behandling av hyperkalcemi – UpToDate."},{"date": "2019-09-27", "cat": "Citat ur Merck Manual Home Edition (MSD Manuals)", "desc": "Allvarlig hyperkalcemi kan orsaka hjärndysfunktion, vilket leder till förvirring, känslomässiga störningar, delirium, hallucinationer och koma. Det kan också orsaka muskelsvaghet, arytmi och slutligen dödsfall."},{"date": "2019-09-27", "cat": "Internetsökning", "desc": "Bradykardi (låg hjärtfrekvens); Hjärtfrekvens; Kalciumhalt i blodplasma; Behandling av hyperkalcemi (förhöjt kalcium i blodet)."},{"date": "2019-09-27", "cat": "Journal", "desc": "telemetri som visar intermittent AV-block 2, Zhihui flyttas till hjärtavdelning."},{"date": "2019-09-27", "cat": "Chatt Zoe till Zhihui", "desc": "Varför påverkar blodkalciumet fortfarande hjärtat..."},{"date": "2019-09-28", "cat": "Chatt Zoe till Ir0nF1st", "desc": "Vad händer om han (Zhihui) dör om några år på grund av lugnknutorna, gäller den nuvarande försäkringen fortfarande..."},{"date": "2019-10-02", "cat": "Internetsökning", "desc": "Vitamin D; Vitamin D 500 IE"},{"date": "2019-10-02", "cat": "Besökt hemsida", "desc": "Vitamin D – Baidu Baike"},{"date": "2019-10-02", "cat": "Journal", "desc": "Zhihuis tillstånd diskuteras på gemensam hjärtsviksrond för SLL. Zhihui flyttas till Karolinska sjukhuset."},{"date": "2019-10-03", "cat": "Internetsökning", "desc": "Poängsystem för emigration till Australien; Biverkningar av pacemaker"},{"date": "2019-10-03", "cat": "Besökta hemsidor", "desc": "Pacemaker – Baidu Baike; Vanliga problem efter pacemaker implantation – Tianjin tredje centralsjukhus"},{"date": "2019-10-03", "cat": "Journal", "desc": "Zhihuis hyperkalcemi diskuteras på Sarkidoskonferens."},{"date": "2019-10-04", "cat": "Journal", "desc": "Diskussion flera läkare, kardiolog och endokrinologkonsult. Rekommenderas en engångsdos Prolia som bör sänka kalcium över längre tid. 2019-10-05 noteras dehydrerad fortsatt uttalad hyperkalcemi."},{"date": "2019-10-05", "cat": "Värde", "desc": "Zhihui hade vid provtillfället 1,71 S-Calciumjon fri (ref. värde 1,15-1,35)."},{"date": "2019-10-07", "cat": "Chatt Zoe till Zhihui", "desc": "Jag måste komma imorgon, läkaren ska ställa diagnos."},{"date": "2019-10-08", "cat": "Inköp", "desc": "Kalium, 2 förpackningar, 200 dagsdoser."},{"date": "2019-10-09", "cat": "Internetsökning", "desc": "Hjärtrytmstörning – blockering i retledningssystemet."},{"date": "2019-10-09", "cat": "Besökt hemsida", "desc": "Hjärtrytmstörning blockering i retledningssysteme – Baidu Baike"},{"date": "2019-10-09", "cat": "Äktenskapsförord", "desc": "signeras av Zhihui och Zoe, enligt kopian från Skatteverket. Inkom till Skatteverket 2019-10-17 och registrerades 2019-11-06."},{"date": "2019-10-10", "cat": "Mejl Zoe till Kristina (S&P)", "desc": "please send me the new Revers, which states my husband owned me 750 000 sek for renovation and updated äktenskap, which should include the information that everything under my name belongs to me instead of marriage joint property. No matter for the past and for the future timeline."},{"date": "2019-10-15", "cat": "Chatt Zhihui till Zoe", "desc": "Zhihui informerar henne att läkare konstaterar D-vitaminförgiftning."},{"date": "2019-10-16", "cat": "Chatt Zoe till Zhihui", "desc": "Jag sa att läkaren förslag att du skulle få en pacemaker...."},{"date": "2019-10-22", "cat": "Journal", "desc": "Återbesök för sarkoidos. Läkare reflekterar över Zhihuis &quot;märkligt höga&quot; nivåer av 1,25-hydroxivitamin D och 25-hydroxivitamin. Noterar att det talar emot samband med sarkoidos."},{"date": "2019-10-25", "cat": "Inköp", "desc": "D-vitamin, 2 förpackningar, 100 dagsdoser."},{"date": "2019-10-31", "cat": "Journal", "desc": "Hjärtsarkoidoskonferens. Noterar att orsak till hyperkalcemi labmässigt talar mer för vitamin d-intoxikation."},{"date": "2019-11-01", "cat": "Chatt Zoe till Bingwen He", "desc": "Zoe skriver att relationen mellan henne och Zhihui är &quot;game over&quot;."},{"date": "2019-11-06", "cat": "Inköp", "desc": "D-vitamin, 12 förpackningar, 2680 dagsdoser."},{"date": "2019-11-09", "cat": "Inköp", "desc": "D-vitamin, 1 förpackning, 150 dagsdoser."},{"date": "2019-11-11", "cat": "Inköp", "desc": "D-vitamin, 2 förpackningar, 60 dagsdoser."},{"date": "2019-11-11", "cat": "Journal", "desc": "Kommer på remiss från lungmottagningen under diagnos hyperkalcemi, D-vitaminintox."},{"date": "2019-11-18", "cat": "Inköp", "desc": "D-vitamin, 16 förpackningar, 2800 dagsdoser."},{"date": "2019-11-25", "cat": "Chatt Zoe till Zhihui", "desc": "Uppmaning om att teckna livförsäkring."},{"date": "2019-11-26", "cat": "Inköp", "desc": "D-vitamin, 20 förpackningar, 2760 dagsdoser."},{"date": "2019-12-05", "cat": "Journal", "desc": "Återbesök sarkoidos. PET-CT thorax och lungröntgen 2019-10-07 visade ingen aktivitet i lungvävnad eller lymfkörtlar. De tar ställning till pacemaker."},{"date": "2019-12-15", "cat": "Inköp", "desc": "D-vitamin, 2 förpackningar, 180 dagsdoser."},{"date": "2019-12-18", "cat": "Chatt Jietan Liu till Zoe", "desc": "Kondomerna är fortfarande inte slut."},{"date": "2019-12-18", "cat": "Chatt Zoe till Jietan Liu", "desc": "Vi går hem samtidigt."},{"date": "2019-12-19", "cat": "Chatt Zoe till Jietan Liu", "desc": "Imorgon eftermiddag går vi till West Best (hotell)..."},{"date": "2019-12-19", "cat": "Inköp", "desc": "D-vitamin, 4 förpackningar, 200 dagsdoser."},{"date": "2019-12-20", "cat": "Övrigt", "desc": "Zoe har ett bokat hotellrum på Best Western Plus Glow Hotel fram till 2019-12-21."},{"date": "2019-12-24", "cat": "Inköp", "desc": "D-vitamin, 1 förpackning, 60 dagsdoser."},{"date": "2020-01-04", "cat": "Inköp", "desc": "D-vitamin, 15 förpackningar, 3750 dagsdoser."},{"date": "2020-01-12", "cat": "Inköp", "desc": "D-vitamin, 10 förpackningar, 500 dagsdoser."},{"date": "2020-01-14", "cat": "Inköp", "desc": "D-vitamin, 2 förpackningar, 180 dagsdoser."},{"date": "2020-01-17", "cat": "Inköp", "desc": "D-vitamin, 2 förpackningar, 180 dagsdoser."},{"date": "2020-01-27", "cat": "Inköp", "desc": "D-vitamin, 2 förpackningar, 180 dagsdoser."},{"date": "2020-01-28", "cat": "Inköp", "desc": "D-vitamin, 3 förpackningar, 230 dagsdoser."},{"date": "2020-02-01", "cat": "Inköp", "desc": "D-vitamin, 2 förpackningar, 80 dagsdoser."},{"date": "2020-02-10", "cat": "Inköp", "desc": "D-vitamin, 27 förpackningar, 4950 dagsdoser."},{"date": "2020-02-14", "cat": "Inköp", "desc": "D-vitamin, 1 förpackning, 90 dagsdoser."},{"date": "2020-02-18", "cat": "Inköp", "desc": "D-vitamin, 1 förpackning, 90 dagsdoser."},{"date": "2020-02-24", "cat": "Inköp", "desc": "D-vitamin, 6 förpackningar, 300 dagsdoser."},{"date": "2020-02-26", "cat": "Inköp", "desc": "D-vitamin, 3 förpackningar, 270 dagsdoser."},{"date": "2020-03-01", "cat": "Inköp", "desc": "D-vitamin, 3 förpackningar, 270 dagsdoser."},{"date": "2020-03-02", "cat": "Inköp", "desc": "D-vitamin, 7 förpackningar, 350 dagsdoser."},{"date": "2020-03-08", "cat": "Inköp", "desc": "D-vitamin, 1 förpackning, 90 dagsdoser."},{"date": "2020-03-15", "cat": "Inköp", "desc": "D-vitamin, 20 förpackningar, 5000 dagsdoser."},{"date": "2020-03-17", "cat": "Inköp", "desc": "D-vitamin, 7 förpackningar, 350 dagsdoser."},{"date": "2020-03-25", "cat": "Inköp", "desc": "D-vitamin, 4 förpackningar, 200 dagsdoser."},{"date": "2020-04-04", "cat": "Inköp", "desc": "D-vitamin, 2 förpackningar, 500 dagsdoser."},{"date": "2020-04-08", "cat": "Inköp", "desc": "D-vitamin, 4 förpackningar, 600 dagsdoser."},{"date": "2020-04-10", "cat": "Inköp", "desc": "D-vitamin, 4 förpackningar, 200 dagsdoser."},{"date": "2020-04-14", "cat": "Inköp", "desc": "D-vitamin, 4 förpackningar, 600 dagsdoser."},{"date": "2020-04-18", "cat": "Inköp", "desc": "D-vitamin, 4 förpackningar, 600 dagsdoser."},{"date": "2020-04-21", "cat": "Inköp", "desc": "D-vitamin, 1 förpackning, 20 dagsdoser."},{"date": "2020-04-23", "cat": "Inköp", "desc": "D-vitamin, 4 förpackningar, 400 dagsdoser."},{"date": "2020-04-25", "cat": "Inköp", "desc": "D-vitamin, 4 förpackningar, 400 dagsdoser."},{"date": "2020-04-27", "cat": "Inköp", "desc": "D-vitamin, 4 förpackningar, 400 dagsdoser."},{"date": "2020-05-01", "cat": "Inköp", "desc": "D-vitamin, 4 förpackningar, 200 dagsdoser."},{"date": "2020-05-04", "cat": "Inköp", "desc": "D-vitamin, 6 förpackningar, 300 dagsdoser."},{"date": "2020-05-07", "cat": "Chatt Zoe till Wei", "desc": "Det finns fler möjligheter i USA...."},{"date": "2020-05-09", "cat": "Inköp", "desc": "D-vitamin, 8 förpackningar, 400 dagsdoser."},{"date": "2020-05-12", "cat": "Inköp", "desc": "D-vitamin, 6 förpackningar, 300 dagsdoser."},{"date": "2020-05-19", "cat": "Inköp", "desc": "D-vitamin, 8 förpackningar, 400 dagsdoser."},{"date": "2020-05-22", "cat": "Inköp", "desc": "D-vitamin, 8 förpackningar, 400 dagsdoser."},{"date": "2020-05-26", "cat": "Inköp", "desc": "D-vitamin, 8 förpackningar, 400 dagsdoser."},{"date": "2020-06-01", "cat": "Värde", "desc": "Zhihui hade vid provtillfället 2,12 S-Calciumjon fri (ref. värde 1,15-1,35)."},{"date": "2020-06-01", "cat": "Journal", "desc": "Zhihui söker akut vård då han känner igenom symptomen, hyperkalcemi igen samt njursvikt som läkare tror delvis beror på dehydrering."},{"date": "2020-06-04", "cat": "Chatt Zhihui till Zoe", "desc": "I oktober när jag skrevs ut så fick jag en injektion med ett läkemedel som hämmar omvandlingen av D-vitamin till kalcium, men det verkar bara i 6 månader...."},{"date": "2020-06-05", "cat": "Inköp", "desc": "2 förpackningar kombinerade ämnen, 190 dagsdoser D-vitamin, 180 kalcium. 4 förpackningar kalcium, 213 dagsdoser."},{"date": "2020-06-05", "cat": "Chatt Zoe till Zhihui", "desc": "Zoe frågar om han kommer få ny injektion. Zhihui informerar om att han redan fått injektion, Prolia."},{"date": "2020-06-07", "cat": "Chatt Zoe till en gruppchatt", "desc": "Jag vill fanimej verkligen hugga honom... Skriver att hennes mamma har betalat kontantinsatsen till deras (hennes och Zhihuis) boende som är värt 13 miljoner och att Zhihui inte ska få en krona. &quot;Planerna är klara...&quot; &quot;Han kommer att få betala priset...&quot;"},{"date": "2020-06-07", "cat": "Inköp", "desc": "3 förpackningar kombinerade ämnen, varav 130 dagsdoser D-vitamin och 130 dagsdoser kalcium."},{"date": "2020-06-08", "cat": "Chatt Zoe till Shoujji", "desc": "Zoe vill köpa flytande Calcium för vuxna, utan fruktsmak av väninnan i Nederländerna."},{"date": "2020-06-11", "cat": "Värde", "desc": "Zhihui hade vid provtillfället 2,18 S-Calciumjon fri (ref. värde 1,15-1,35)."},{"date": "2020-06-12", "cat": "Chatt Zoe till Zhihui", "desc": "Ditt kalcium har stigit så snabbt igen, har läkaren ingen förklaring, så konstigt...."},{"date": "2020-06-22", "cat": "Värde", "desc": "Zhihui hade vid provtillfället 1,72 S-Calciumjon fri (ref. värde 1,15-1,35)."},{"date": "2020-06-22", "cat": "Journal", "desc": "Zhihui rings in till akuten. Prover visar återigen hyperkalcemi. Zhihui skrivs in på Karolinska."},{"date": "2020-06-24", "cat": "Journal", "desc": "Provsvar Zoe visar normala värden på D-vitamin och kalcium."},{"date": "2020-06-29", "cat": "Inköp", "desc": "Kalcium, 1 förpackning 100 dagsdoser."},{"date": "2020-07-04", "cat": "Chatt Zhihui till Zoe", "desc": "CT (scan) visar inga problem i bröstkorg eller buk...."},{"date": "2020-07-10", "cat": "Journal", "desc": "Zhihui blir inringd pga. stigande kalciumvärde. Han skrivs in på sjukhus."},{"date": "2020-07-17", "cat": "Journal", "desc": "Telefonkontakt med Zhihui då värden ökar igen."},{"date": "2020-07-18", "cat": "Värde", "desc": "Zhihui hade vid provtillfället 1,75 S-Calciumjon fri (ref. värde 1,15-1,35)."},{"date": "2020-08-06", "cat": "Inköp", "desc": "D-vitamin, 15 förpackningar, 2150 dagsdoser."},{"date": "2020-08-10", "cat": "Journal", "desc": "Zhihui skrivs in och ut ur sjukhuset samma dag."},{"date": "2020-08-13", "cat": "Inköp", "desc": "D-vitamin, 7 förpackningar, 350 dagsdoser."},{"date": "2020-08-13", "cat": "Värde", "desc": "Zhihui hade vid provtillfället 1,95 och senare på dagen 2,27 S-Calciumjon fri (ref. värde 1,15-1,35)."},{"date": "2020-08-13", "cat": "Journal", "desc": "Zhihui skrivs in för droppbehandling pga. förhöjt Ca värde 1,95. Flyttas till akuten. Vid droppstart visar värdet 2,27."},{"date": "2020-08-15", "cat": "Inköp", "desc": "1 förpackning kombinerade ämnen, 30 dagsdoser D-vitamin, 30 dagsdoser kalcium. 1 förpackning D-vitamin, 60 dagsdoser."},{"date": "2020-08-16", "cat": "Chatt Zhihui till Zoe", "desc": "Läkaren förstår inte heller varför kalciumet alltid stiger när jag är hemma, men sjunker när jag är här..."},{"date": "2020-08-21", "cat": "Journal", "desc": "Zhihui skrivs in 2020-08-21. Notering 2020-08-22 att vid ankomst har patient höga värden som sjunker direkt efter iv vätska på avd."},{"date": "2020-08-22", "cat": "Inköp", "desc": "D-vitamin, 2 förpackningar, 120 dagsdoser."},{"date": "2020-08-25", "cat": "Journal", "desc": "Zhihui skrivs in på ASIH, hemsjukvård. Och får regelbundet dropp i hemmet."},{"date": "2020-08-26", "cat": "Inköp", "desc": "D-vitamin, 2 förpackningar, 120 dagsdoser."},{"date": "2020-09-02", "cat": "Journal", "desc": "ASIH, vårdplan: IV vätska och regelbunden provtagning på ordination av endokrinolog 3 dag/v. Vätskedropp (Ringer Acetat) vid Fri Calciumjon &gt;1,45: 2 liter. &gt;1,6: 3 liter. &gt;1,7: in till sjukhus."},{"date": "2020-09-07", "cat": "Journal", "desc": "Notering om att läkare och patient diskuterar att det är intressant att när Zhihui varit inneliggande så är kalcium stabilt, när han åker hem så stiger det."},{"date": "2020-09-14", "cat": "Värde", "desc": "Zhihui hade vid provtillfället 2730 S-25-OH-Vitamin D (ref. värde 50-250)."},{"date": "2020-09-23", "cat": "Journal", "desc": "Zhihui hänvisas akut in till intensivakuten. In- och utskrivning sjukhus. Visade sig vara felvärden."},{"date": "2020-09-30", "cat": "Journal", "desc": "Notering om att de lämnar 2 NaCl sprutor så pat fru kan spola igenom piccline efter droppet."},{"date": "2020-10-15", "cat": "Inköp", "desc": "D-vitamin, 8 förpackningar, 2000 dagsdoser."},{"date": "2020-10-18", "cat": "Chatt Zoe till en vän i USA", "desc": "Efter några år tänker jag göra en intern transfer till USA eller Australien, ta med barnen...."},{"date": "2020-10-23", "cat": "Chatt Zoe till en vän i USA", "desc": "Zoe berättar om fler karriärmöjligheter inom Google och Microsoft, Zhihui vet inget om detta."},{"date": "2020-10-29", "cat": "Chatt Zoe till hennes mamma", "desc": "Zoe har fått avtalet från Google, ersättningen är drygt 1 miljon kr/år."},{"date": "2020-10-30", "cat": "Chatt Zoe till Wei", "desc": "Om jag kunde ta med sig barnen då skulle jag skilja mig... Zoe skriver att Zhihui bryr sig inte, han vill bara ha hälften av tillgångarna men det vill inte Zoe då det är hennes pengar."},{"date": "2020-11-03", "cat": "Journal", "desc": "Sarkoidos har enligt läkare på Lung allergi mott. inte visat några aktivitetstecken sedan lång tid tillbaka."},{"date": "2020-11-16", "cat": "Journal", "desc": "Provsvar visar calcium 1,6. Dropp på kvällen. Pat kopplar bort själv."},{"date": "2020-11-20", "cat": "Chatt Zoe till Wei", "desc": "Önskar verkligen att han skulle vara otrogen så han kunde dra...."},{"date": "2020-11-23", "cat": "Journal", "desc": "Telefonkontakt. Återigen stigande värden. Meddelar provsvar på 1,52. Dropp ges i hemmet."},{"date": "2020-12-15", "cat": "Journal", "desc": "Notering om att Zhihuis fall diskuterats på European Rare Disease igår. Bedömning om att patient ej har sarkoidos längre."},{"date": "2020-12-21", "cat": "Inköp", "desc": "D-vitamin, 6 förpackningar, 310 dagsdoser."},{"date": "2021-01-05", "cat": "Inköp", "desc": "D-vitamin, 1 förpackning, 60 dagsdoser."},{"date": "2021-01-13", "cat": "Journal", "desc": "Akutbesök av sjuksköterska p.g.a. höga calciumjon 1,69. Påkoppling av dropp."},{"date": "2021-01-18", "cat": "Journal", "desc": "När det gäller sarkoidosen har de vid tidigare CT thorax och lungröntgen inte kunnat notera någon aktivitet i lungvävnad eller lymfkörtlar."},{"date": "2021-02-14", "cat": "Inköp", "desc": "D-vitamin, 14 förpackningar, 3500 dagsdoser."},{"date": "2021-02-16", "cat": "Inköp", "desc": "D-vitamin, 1 förpackning, 60 dagsdoser."},{"date": "2021-02-22", "cat": "Journal", "desc": "Calcium fortsatt högt under en veckas tid trots flertalet liter dropp."},{"date": "2021-04-21", "cat": "Inköp", "desc": "D-vitamin, 4 förpackningar, 200 dagsdoser."},{"date": "2021-04-30", "cat": "Inköp", "desc": "Kalcium, 4 förpackningar, 384 dagsdoser."},{"date": "2021-04-30", "cat": "Journal", "desc": "Inga tecken till sarkoidosaktivitet. Läkare konstaterar att 25-OH Vitamin D senaste veckorna tydligt börjat sjunka. Något förbryllande."},{"date": "2021-05-10", "cat": "Förhör/värde", "desc": "Zhihui hade vid provtillfället 1480 S-25-OH-Vitamin D (ref. värde 50-250)."},{"date": "2021-05-18", "cat": "Inköp", "desc": "Kalcium, 4 förpackningar, 384 dagsdoser."},{"date": "2021-05-28", "cat": "Journal", "desc": "Zhihui har metallsmak i munnen idag, tror själv att calciumet är högt idag. Calcium 1,57. Läkare Martin Dreilich ordinerar ytterligare 1 liter RA."},{"date": "2021-06-02", "cat": "Inköp", "desc": "Kalcium, 4 förpackningar, 384 dagsdoser."},{"date": "2021-06-04", "cat": "Journal", "desc": "Zhihui uppger mycket metallsmak i munnen idag, tror själv att calciumet är högt. provsvar 1,52. Kollega åker och kopplar ytterligare en liter."},{"date": "2021-06-10", "cat": "Inköp", "desc": "D-vitamin, 1 förpackning, 60 dagsdoser."},{"date": "2021-06-13", "cat": "Inköp", "desc": "D-vitamin, 1 förpackning, 60 dagsdoser."},{"date": "2021-06-20", "cat": "Inköp", "desc": "Kalcium, 4 förpackningar, 384 dagsdoser."},{"date": "2021-06-28", "cat": "Journal", "desc": "Notering om att senaste veckorna återigen högre calciumnivåer. D-vitamin nivåerna har de senaste månaderna legat stabilare."},{"date": "2021-07-05", "cat": "Journal", "desc": "Höga värden. Calcium 1.64. Dropp i hemmet."},{"date": "2021-07-07", "cat": "Övrigt", "desc": "Zhihui köper flygbiljett Stockholm–Beijing med avresa 2021-08-08."},{"date": "2021-07-16", "cat": "Inköp", "desc": "D-vitamin, 10 förpackningar, 900 dagsdoser."},{"date": "2021-07-19", "cat": "Övrigt", "desc": "Zhihui inser att någon kan ha tillsatt något i hans vattenflaskor; slutar dricka ur flaskorna och dricker enbart direkt från kranen från och med detta datum."},{"date": "2021-07-19", "cat": "Inköp Kalium", "desc": "Mineralife Kalium 240 ml, 3 flaskor (720 ml totalt, 288 dagsdoser). Aktbil 43 s.301."},{"date": "2021-07-20", "cat": "Journal", "desc": "Låg puls, höga värden. Patient har under helgen haft låg puls enligt pulsklocka. Provsvar visar Calcium 1.47. Dropp i hemmet."},{"date": "2021-07-22", "cat": "Övrigt", "desc": "Zhihui sätter upp en kamera på sitt kontor. Två filmer spelas in 2021-07-22 kring 20:53. I ena filmen ser man att Zoe tar upp en av Zhihuis vattenflaskor, hon dricker lite ut den, tar upp en liten brun flaska och häller i någon vätska i Zhihuis vattenflaska. På den andra filmen, mindre än en minut senare, häller Zoe i innehåll från den lilla bruna flaskan i en annan av Zhihuis vattenflaskor."},{"date": "2021-07-23", "cat": "Journal", "desc": "Notering om att patient misstänker att fru förgiftat honom. Visar videos, vill polisanmäla fru. Sjukhus tar emot vattenflaskor för test. Läkaren gör en polisanmälan."},{"date": "2021-07-23", "cat": "Övrigt", "desc": "En film spelas in 2021-07-23 kring 10:46. Man ser Zoe komma in i kontoret igen, hon tar upp en liten brun flaska och häller i innehållet i Zhihuis ena vattenflaska."},{"date": "2021-07-24", "cat": "Övrigt", "desc": "Zoe Tang grips av polis klockan 00:18."},{"date": "2021-07-27", "cat": "Journal", "desc": "Inget behov av infusion idag, calciumvärde 1,20."},{"date": "2021-08-16", "cat": "Journal", "desc": "Notering om patients kalcium värde legat normalt sedan frun greps."},{"date": "2021-08-23", "cat": "Journal", "desc": "Notering om att efter att hustrun ej befunnit sig i hemmet normaliserades värden av kalcium momentant och behovet av iv vätska upphört. ASIH:s uppdrag avslutas."},{"date": "2021-08-27", "cat": "Journal", "desc": "Notering om att värden ser fortsatt bra ut, de glesar ut provtagning till varannan vecka."},{"date": "2021-10-05", "cat": "Journal", "desc": "Notering om att kalcium nu är bra, D-vitamin tar längre tid, kan ta 12 månader tills de klingar av."},{"date": "2022-04-01", "cat": "Journal", "desc": "Notering om att kalcium är normalt, D-vitamin fortfarande förhöjt."},{"date": "2022-05-09", "cat": "Journal", "desc": "Läkare konstaterar att kalciumvärde normaliserades direkt från 20-23 juli 2021. Sannolikt p.g.a. stort kalkintag via kosten före den 23 juli som försvann. Möjligt att han fått i sig även den aktiva formen 1,25 OH Vitamin D via kosten i någon mån."},{"date": "2022-09-12", "cat": "Journal", "desc": "Läkare tittar på kurvorna runt tiden för fruns gripande, konstaterar att 1,25-nivån direkt efteråt blev betydligt normalare. Möjligt att han förutom kalcium faktiskt i huvudsak fått 1,25-Vitamin D på regelbunden basis och att 25-OH-varianten gavs mera sporadiskt och möjligen mera tidigare i förloppet."}];
+
+const wrap=document.getElementById('timeline');
+const cntBig=document.getElementById('cnt-big');
+const cntLabel=document.getElementById('cnt-label');
+let obs=null;
+
+function yr(d){return d.slice(0,4);}
+function parseDate(d){return new Date(d.replace(/xx/g,'15'));}
+function gapPx(days){return Math.round(Math.max(8,Math.sqrt(days)*9));}
+function gapLabel(days){
+  if(days<=1)return null;
+  if(days<30)return days+' dagar';
+  if(days<60)return Math.round(days/7)+' veckor';
+  if(days<365)return Math.round(days/30)+' månader';
+  return(days/365).toFixed(1)+' år';
+}
+
+function groupByDate(events){
+  const groups=[];
+  for(const ev of events){
+    const last=groups[groups.length-1];
+    if(last&&last.date===ev.date)last.events.push(ev);
+    else groups.push({date:ev.date,events:[ev]});
+  }
+  return groups;
+}
+
+function build(filter){
+  const axisLine=wrap.querySelector('.axis-line');
+  wrap.innerHTML='';wrap.appendChild(axisLine);
+  if(obs){obs.disconnect();obs=null;}
+  let lastY=null,n=0,side=0;
+
+  const visible=filter==='all'?EVENTS:EVENTS.filter(e=>e.cat===filter);
+  const groups=groupByDate(visible);
+
+  groups.forEach((grp,gi)=>{
+    const y=yr(grp.date);
+    if(y!==lastY){
+      const sep=document.createElement('div');
+      sep.className='yr-sep';
+      sep.innerHTML=`<div class="yr-line l"></div><div class="yr-badge"><span>${y}</span></div><div class="yr-line r"></div>`;
+      wrap.appendChild(sep);lastY=y;
+    }
+
+    const evs=grp.events;
+    let lastRow=null;
+
+    evs.forEach((ev,i)=>{
+      const num=String(++n).padStart(3,'0');
+      const col=CAT_COLOR[ev.cat]||'var(--c-ovrigt)';
+      const ind=CAT_INDENT[ev.cat]||36;
+      const card=`<div class="tl-card" style="color:${col};border-color:${col};border-width:2px">
+        <div class="c-hdr"><span class="cat-tag">${ev.cat}</span><span class="evt-num">#${num}</span></div>
+        <div class="c-desc">${ev.desc}</div></div>`;
+      const dotHtml=i===0
+        ?`<div class="tl-dot"><div class="dw" style="color:${col}"><div class="dc"></div></div><div class="dd">${grp.date.replace(/xx/g,'—')}</div></div>`
+        :`<div class="tl-dot-cont"></div>`;
+      const row=document.createElement('div');
+      row.className='tl-row';
+      if(side===0){
+        row.innerHTML=`<div class="tl-l" style="--cat-indent:${ind}px;color:${col}">${card}</div>${dotHtml}`;
+      } else {
+        row.innerHTML=`${dotHtml}<div class="tl-r" style="--cat-indent:${ind}px;color:${col}">${card}</div>`;
+      }
+      wrap.appendChild(row);
+      lastRow=row;
+    });
+    side=1-side;
+
+    if(gi<groups.length-1&&lastRow){
+      const days=Math.max(0,Math.round((parseDate(groups[gi+1].date)-parseDate(grp.date))/864e5));
+      lastRow.style.marginBottom=gapPx(days)+'px';
+      const lbl=gapLabel(days);
+      if(lbl){
+        const gap=document.createElement('div');
+        gap.className='gap-marker';
+        gap.innerHTML=`<span>${lbl}</span>`;
+        wrap.appendChild(gap);
+      }
+    }
+  });
+
+  cntBig.textContent=n;cntLabel.textContent=n+' händelser';
+  obs=new IntersectionObserver(entries=>{
+    entries.forEach(e=>{if(e.isIntersecting){e.target.classList.add('show');obs.unobserve(e.target);}});
+  },{threshold:.08,rootMargin:'0px 0px -30px 0px'});
+  wrap.querySelectorAll('.tl-card').forEach(c=>obs.observe(c));
+}
+
+build('all');
+
+document.querySelectorAll('.fbtn').forEach(b=>{
+  b.addEventListener('click',()=>{
+    document.querySelectorAll('.fbtn').forEach(x=>x.classList.remove('on'));
+    b.classList.add('on');build(b.dataset.cat);
+  });
+});
+
+window.addEventListener('scroll',()=>{
+  const max=document.body.scrollHeight-window.innerHeight;
+  document.getElementById('spb').style.width=(max>0?window.scrollY/max*100:0)+'%';
+},{passive:true});
+</script>
+</body>
+</html>
